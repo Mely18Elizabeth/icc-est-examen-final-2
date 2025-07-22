@@ -8,7 +8,7 @@ public class Maquina {
     int subred;
     int riesgo;
     List<Integer> codigos;
-    public Maquina(String nombre, String ip, int subred, int riesgo, List<Integer> codigos) {
+    public Maquina(String nombre, String ip, int subred, int riesgo, List<Integer>codigos) {
         this.nombre = nombre;
         this.ip = ip;
         this.subred = subred;
