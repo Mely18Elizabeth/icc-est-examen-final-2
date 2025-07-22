@@ -1,10 +1,16 @@
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
-import controllers.MaquinaController;
+import org.junit.jupiter.api.Test;
+
+import controller.MaquinaController;
 import models.Maquina;
+import validaciones.ValidacionesMaquina;
 
 public class App {
     public static void main(String[] args) throws Exception {
@@ -67,5 +73,40 @@ public class App {
                 new Maquina("DB13", "71.248.50.86", Arrays.asList(17, 11, 12)));
         return maquinas;
 
+    }
+
+     public void testMakeRiesgo() {
+        Maquina m = new Maquina("Nodo99", "10.0.180.15", Arrays.asList(10, 15, 20));
+
+        System.out.println("Ejecutando testMakeRiesgo");
+        ValidacionesMaquina.validarCampoRiesgo(m, m.getRiesgo()); // 7 letras únicas en "Nodo99"
+    }
+
+    public void testFiltrarPorSubred() {
+        List<Maquina> maquinas = crearMaquinas();
+        Stack<Maquina> resultado = controller.filtrarPorSubred(maquinas, 150);
+        ValidacionesMaquina.validarResultadoA(new HashSet<>(resultado), resultado.size(), 150);
+    }
+
+    public void testOrdenarPorSubred() {
+        List<Maquina> maquinas = crearMaquinas();
+        Stack<Maquina> pila = controller.filtrarPorSubred(maquinas, 150);
+        ValidacionesMaquina.validarResultadoA(new HashSet<>(pila), pila.size(), 150);
+
+        Set<Maquina> resultado = controller.ordenarPorSubred(pila);
+        ValidacionesMaquina.validarResultadoB(resultado, maquinas);
+    }
+    public void testAgruparPorRiesgo() {
+        List<Maquina> maquinas = crearMaquinas();
+        Map<Integer, Queue<Maquina>> resultado = controller.agruparPorRiesgo(maquinas);
+        ValidacionesMaquina.validarResultadoC(resultado, maquinas);
+    }
+
+    public void testExplotarGrupo() {
+        List<Maquina> maquinas = crearMaquinas();
+        Map<Integer, Queue<Maquina>> mapa = controller.agruparPorRiesgo(maquinas);
+        Stack<Maquina> resultado = controller.explotarGrupo(mapa);
+
+        ValidacionesMaquina.validarResultadoD(resultado, maquinas);
     }
 }
